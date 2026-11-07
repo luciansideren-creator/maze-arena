@@ -1,0 +1,65 @@
+{
+  "q-learning": {
+    "name": "Q-learning",
+    "tag": "异策略（off-policy）· 时序差分",
+    "summary": "每走一步，就用“眼前奖励 + 下一状态里最好的动作的价值”来修正当前动作的价值 Q(s,a)。更新时假设之后总是走最优动作，不管实际有没有探索，所以学到的是“最优路线”的价值，敢于贴着危险走近路。",
+    "formulas": [
+      { "label": "更新公式", "tex": "Q(s,a)\\leftarrow Q(s,a)+\\alpha\\big[r+\\gamma\\max_{a'}Q(s',a')-Q(s,a)\\big]" }
+    ],
+    "tips": "学习率 α 越大学得越快但越不稳；折扣 γ 越大越看重远处的宝箱和出口。"
+  },
+  "sarsa": {
+    "name": "SARSA",
+    "tag": "同策略（on-policy）· 时序差分",
+    "summary": "和 Q-learning 很像，但更新用的是“下一步实际会选的动作”的价值。因为实际动作里包含随机探索，它会把“探索时可能踩陷阱”的风险算进去，所以更倾向绕开危险的近路。",
+    "formulas": [
+      { "label": "更新公式", "tex": "Q(s,a)\\leftarrow Q(s,a)+\\alpha\\big[r+\\gamma Q(s',a')-Q(s,a)\\big]" }
+    ],
+    "tips": "对比 Q-learning 和 SARSA 在“尖刺走廊”上的路线差异，就能直观看到 on-policy 与 off-policy 的区别（第 2 天加入）。"
+  },
+  "expected-sarsa": {
+    "name": "Expected SARSA",
+    "tag": "时序差分 · 用期望代替采样",
+    "summary": "不去采样下一步的动作，而是对下一状态里所有动作按当前策略的概率求期望。比 SARSA 少了一层随机噪声，通常更稳；当策略是完全贪婪时，它就退化成 Q-learning。",
+    "formulas": [
+      { "label": "更新公式", "tex": "Q(s,a)\\leftarrow Q(s,a)+\\alpha\\big[r+\\gamma\\sum_{a'}\\pi(a'|s')Q(s',a')-Q(s,a)\\big]" }
+    ],
+    "tips": "探索率 ε 越大，期望里“随机动作”的权重越大。"
+  },
+  "monte-carlo": {
+    "name": "蒙特卡洛控制",
+    "tag": "整回合更新 · 不需要“自举”",
+    "summary": "等一整个回合结束，再从后往前算出每一步之后实际拿到的总回报 G，用它去修正 Q。没有估计误差的传播，但必须等回合结束，而且回报的波动大，通常收敛得慢一些。",
+    "formulas": [
+      { "label": "回报", "tex": "G_t=r_{t+1}+\\gamma G_{t+1}" },
+      { "label": "更新公式", "tex": "Q(s_t,a_t)\\leftarrow Q(s_t,a_t)+\\alpha\\big[G_t-Q(s_t,a_t)\\big]" }
+    ],
+    "tips": "回合越长（比如一直撞墙拖到超时），G 里累积的步数惩罚越多。"
+  },
+  "actor-critic": {
+    "name": "Actor-Critic",
+    "tag": "策略梯度 + 价值估计",
+    "summary": "两个角色一起学：Critic 学状态价值 V(s)，并给出“这一步比预期好多少”的 TD 误差 δ；Actor 维护每个动作的偏好 h(s,a)，按 softmax 选动作，δ 为正就提高刚才那个动作的概率。它自己直接输出策略，所以不使用 ε-greedy。",
+    "formulas": [
+      { "label": "TD 误差", "tex": "\\delta=r+\\gamma V(s')-V(s)" },
+      { "label": "Critic", "tex": "V(s)\\leftarrow V(s)+\\alpha_c\\,\\delta" },
+      { "label": "Actor", "tex": "h(s,a)\\leftarrow h(s,a)+\\alpha_a\\,\\delta\\,\\big[\\mathbb{1}_{a}-\\pi(a|s)\\big]" }
+    ],
+    "tips": "两个学习率分别控制 Critic 和 Actor 的速度。Actor 学得太快而 Critic 还没跟上时，容易走偏。"
+  },
+  "sr": {
+    "name": "后继表示（SR）",
+    "tag": "价值 = 未来会去哪里 × 那里有多少奖励",
+    "summary": "把“环境的结构”和“奖励”拆开学：M(s,j) 记录从 s 出发，未来会（带折扣地）访问状态 j 多少次；奖励单独记录。两者相乘得到价值。奖励变了只需要重学奖励部分，不用重学整张表。本项目的奖励取决于转移（第一次拿宝箱才有 +10），所以奖励按（状态,动作）记录。",
+    "formulas": [
+      { "label": "占有量更新", "tex": "M(s,\\cdot)\\leftarrow M(s,\\cdot)+\\alpha_M\\big[\\mathbb{1}_s+\\gamma M(s',\\cdot)-M(s,\\cdot)\\big]" },
+      { "label": "价值", "tex": "V(s)=\\sum_{j}M(s,j)\\,\\bar r(j)" }
+    ],
+    "tips": "M 是“状态数 × 状态数”的矩阵，状态多了很占内存，所以 SR 只在训练场提供。"
+  },
+  "state": {
+    "title": "为什么状态里要有“已收集的宝箱”",
+    "text": "如果状态只有位置，“捡过宝箱”和“没捡过”在算法眼里是同一个状态，环境就不满足马尔可夫性，算法学不会“先拿宝箱、再去出口”。本项目把已收集情况编进状态：s = (y×W + x)×2^K + 掩码。右上角的“热力图分层”切换的就是这个掩码。",
+    "monster": "怪物位置不在状态里（否则状态数会膨胀上百倍），所以智能体看不见怪物，只能从经验里学到“哪片区域容易被抓”。"
+  }
+}

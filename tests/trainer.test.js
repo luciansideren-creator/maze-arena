@@ -74,3 +74,15 @@ test('超时回合：timeout 结局，学习时按"未终止"处理（仍可估�
   t.runEpisodes(5);
   assert.ok(t.lengths.every((n) => n <= 3));
 });
+
+test('finishEpisode 把进行中的回合跑完并记录', () => {
+  const t = new Trainer({ maze: NOVICE, algorithm: 'monte-carlo', seed: 2 });
+  t.beginEpisode();
+  t.step();
+  t.step();
+  assert.equal(t.active, true);
+  t.finishEpisode();
+  assert.equal(t.active, false);
+  assert.equal(t.episodes, 1);
+  assert.equal(t.algo.trajectory.length, 0);
+});

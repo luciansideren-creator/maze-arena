@@ -1,0 +1,15 @@
+.canvas-wrap { overflow-x: auto; background: #14141c; border-radius: 8px; padding: 4px; line-height: 0; }
+.pixel-canvas { image-rendering: pixelated; image-rendering: crisp-edges; display: block; margin: 0 auto; }
+
+.hero-wrap { position: relative; }
+.hero-btn { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px; line-height: 0; }
+.hero-btn:hover { border-color: var(--gold); }
+.avatar { image-rendering: pixelated; }
+.hero-pop {
+  position: absolute; z-index: 10; top: 100%; left: 0; margin-top: 6px; padding: 8px;
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 24px rgba(0, 0, 0, .5);
+}
+.hero-opt { background: var(--panel-2); border: 1px solid transparent; border-radius: 6px; padding: 4px; line-height: 0; }
+.hero-opt:hover { border-color: var(--text-2); }
+.hero-opt.active { border-color: var(--gold); }

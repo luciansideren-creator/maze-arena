@@ -104,6 +104,11 @@ export class Trainer {
     };
   }
 
+  /** 把正在进行的回合跑完（切换档位、快进前用，避免半截回合污染蒙特卡洛的轨迹） */
+  finishEpisode() {
+    while (this.active) this.step();
+  }
+
   runEpisode() {
     this.beginEpisode();
     let r;

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>智能迷宫 · 寻宝竞技场</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗝️</text></svg>">
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/pixel.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#/training"><span class="brand-mark">◆</span> 智能迷宫 <span class="muted">· 强化学习寻宝竞技场</span></a>
+    <nav id="nav" aria-label="主导航">
+      <a href="#/workshop" data-route="/workshop">迷宫工坊</a>
+      <a href="#/training" data-route="/training">训练场</a>
+      <a href="#/arena" data-route="/arena">竞技场</a>
+      <a href="#/about" data-route="/about">关于</a>
+    </nav>
+  </header>
+  <div id="narrow-warning" role="alert">请放大浏览器窗口（宽度至少 1280px），本项目只支持电脑网页端。</div>
+  <main id="app" aria-live="polite"></main>
+
+  <script src="vendor/chart.umd.min.js"></script>
+  <script src="vendor/katex/katex.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
