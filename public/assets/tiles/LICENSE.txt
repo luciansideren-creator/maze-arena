@@ -1,0 +1,4 @@
+0x72 Dungeon Tileset II v1.7
+作者：0x72   https://0x72.itch.io/dungeontileset-ii
+许可：CC0（作者页面原文："You can use this tileset for whatever you like (CC-0)."）
+tileset.png 为素材包原图，tiles.json 由 tools/gen-tiles-json.mjs 根据 tile_list_v1.7 生成。
